@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # express-xml-bodyparser
 
 For those rare cases when you have to parse incoming raw xml-body requests. This middleware works with any connect- or express-based nodejs application. 
@@ -65,12 +64,4 @@ app.post('/receive-xml', xmlparser({trim: false, explicitArray: false}), functio
 
 Above example demonstrates how to pass custom options to the xml parser. 
 
-## some ending note
 
-
-=======
-express-xml-bodyparser
-======================
-
-Simple XML body parser connect/express middleware
->>>>>>> 84c2dd7741cdb135d23a0a47180032e9dfff0900
