@@ -50,10 +50,9 @@ module.exports = function (opts) {
         });
 
         req.on('end', function () {
-            parseString(options, data, function (err, json) {
+            parseString(data, options, function (err, json) {
                 if (err) {
                     err.status = 400;
-                    err.body = data;
                     return next(err);
                 }
                 req.body = json;
