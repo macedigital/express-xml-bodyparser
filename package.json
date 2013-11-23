@@ -1,0 +1,30 @@
+{
+  "name": "express-xml-bodyparser",
+  "version": "0.0.1",
+  "description": "Simple XML body parser connect/express middleware",
+  "author": "Matthias Adler <macedigital@gmail.com> (http://matthiasadler.info/)",
+  "homepage": "https://github.com/macedigital/express-xml-bodyparser.git",
+  "main": "./index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:macedigital/express-xml-bodyparser.git"
+  },
+  "keywords": [
+    "xml",
+    "json",
+    "middleware"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/macedigital/express-xml-bodyparser/issues"
+  },
+  "dependencies": {
+    "xml2js": "~0.2.8"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}
