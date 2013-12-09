@@ -65,4 +65,4 @@ module.exports = function (opts) {
 
 };
 
-exports.regexp = /^application\/([\w!#\$%&\*`\-\.\^~]*\+)?xml$/i;
+exports.regexp = /^(text\/xml|application\/([\w!#\$%&\*`\-\.\^~]+\+)?xml)$/i;
