@@ -50,12 +50,12 @@ module.exports = function (opts) {
         });
 
         req.on('end', function () {
-            parseString(data, options, function (err, json) {
+            parseString(data, options, function (err, xml) {
                 if (err) {
                     err.status = 400;
                     return next(err);
                 }
-                req.body = json;
+                req.body = xml;
                 req.rawBody = data;
                 next();
             });
