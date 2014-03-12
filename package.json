@@ -1,8 +1,12 @@
 {
   "name": "express-xml-bodyparser",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Simple XML body parser connect/express middleware",
   "author": "Matthias Adler <macedigital@gmail.com> (http://matthiasadler.info/)",
+  "contributors": [
+    "asperling (https://github.com/asperling)",
+    "Pavel Strashkin (https://github.com/xaka)"
+  ],
   "homepage": "https://github.com/macedigital/express-xml-bodyparser.git",
   "main": "./index.js",
   "scripts": {
@@ -22,7 +26,7 @@
     "url": "https://github.com/macedigital/express-xml-bodyparser/issues"
   },
   "dependencies": {
-    "xml2js": "~0.2.8"
+    "xml2js": "~0.4.1"
   },
   "devDependencies": {
     "mocha": "*"
