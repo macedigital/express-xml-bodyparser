@@ -31,7 +31,7 @@ You can either use express-xml-bodyparser at application level, or for specific 
 
 Here is an example of an express application with default settings:
 
-````
+````javascript
 var express = require('express'),
     app = express(),
     http = require('http'),
@@ -56,7 +56,7 @@ server.listen(1337);
 
 If you wanted to use express-xml-bodyparser for specific routes only, you would do something like this:
 
-````
+````javascript
 app.post('/receive-xml', xmlparser({trim: false, explicitArray: false}), function(req, res, next) {
   // check req.body  
 });
@@ -64,4 +64,22 @@ app.post('/receive-xml', xmlparser({trim: false, explicitArray: false}), functio
 
 Above example demonstrates how to pass custom options to the xml parser. 
 
+## Customize mime-type detection
+
+If you want to customize the regular expression that checks whether the xmlparser should do its work or not, 
+you can provide your own by overloading the `xmlparser.regexp` property, like so: 
+
+````javascript
+var xmlparser = require('express-xml-bodyparser');
+xmlparser.regexp = /^text\/xml$/i;
+````
+
+Doing so, will allow you to restrict xml parsing to custom mime-types only. Thanks to @ophentis for the suggestion.
+Just make sure your regular expression actually matches mime-types you're interested in.
+The feature is available since version v0.0.5.
+
+## TODO / Ideas
+
+* Refactor to use node's StreamAPIv2 (in effect requiring nodejs >= v0.10.x).
+* Provide functional tests incorporating (any version of) [express](http://expressjs.com/).
 

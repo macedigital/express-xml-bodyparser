@@ -1,11 +1,12 @@
 {
   "name": "express-xml-bodyparser",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simple XML body parser connect/express middleware",
   "author": "Matthias Adler <macedigital@gmail.com> (http://matthiasadler.info/)",
   "contributors": [
     "asperling (https://github.com/asperling)",
-    "Pavel Strashkin (https://github.com/xaka)"
+    "Pavel Strashkin (https://github.com/xaka)",
+    "ophentis (https://github.com/ophentis)"
   ],
   "homepage": "https://github.com/macedigital/express-xml-bodyparser.git",
   "main": "./index.js",
