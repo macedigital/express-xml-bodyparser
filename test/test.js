@@ -5,7 +5,7 @@ describe('XmlParserMiddleware', function () {
 
     describe('#testMime', function () {
 
-        var regexp = /^(text\/xml|application\/([\w!#\$%&\*`\-\.\^~]+\+)?xml)$/i;
+        var regexp = xmlparser.regexp;
 
         it('should detect common XML mime-types', function () {
  
