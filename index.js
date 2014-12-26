@@ -38,7 +38,7 @@ module.exports = function (opts) {
 
         req.body = req.body || {};
 
-        if (!utils.hasBody(req) || !exports.regexp.test(utils.mime(req))) {
+        if (!utils.hasBody(req) || !module.exports.regexp.test(utils.mime(req))) {
             return next();
         }
 
