@@ -30,6 +30,8 @@
     "xml2js": "~0.4.1"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "supertest": "*",
+    "express": "<5.x"
   }
 }
