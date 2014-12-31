@@ -32,7 +32,7 @@ describe('XmlParserMiddleware', function () {
 
     });
 
-    describe('#testParser', function () {
+    describe('#testMiddleware', function () {
 
         var app = express();
 
@@ -41,16 +41,21 @@ describe('XmlParserMiddleware', function () {
             res.json(req.body);
         });
 
-        it('should ignore empty request', function () {
-
+        it('should throw 411 on null request', function (done) {
             request(app)
               .post('/')
               .set('Content-Type', 'application/xml')
-              .expect(200)
-              .end(function(err, res) {
-                  if (err) throw err;
-                  assert.deepEqual({}, res.body);
-            });
+              .expect(411, done)
+            ;
+        });
+
+        it('should throw 411 on empty request body', function (done) {
+            request(app)
+              .post('/')
+              .set('Content-Type', 'application/xml')
+              .send('   ')
+              .expect(411, done)
+            ;
         });
 
         it('should parse xml body', function () {
@@ -65,10 +70,53 @@ describe('XmlParserMiddleware', function () {
                   assert.deepEqual(itemList, res.body);
               });
         });
+        
+        it('should throw 400 on invalid xml body', function (done) {
+
+            request(app)
+              .post('/')
+              .set('Content-Type', 'application/vendor-spec+xml')
+              .send('<xml>this is invalid')
+              .expect(400, done)
+            ;
+        });
+        
+        it('should not parse xml body if other body-parser ran before', function (done) {
+
+            request(app)
+              .post('/')
+              .set('Content-Type', 'application/vendor-spec+xml')
+              .send(itemsXML)
+              .expect(200, done);
+        });
 
     });
-
-    describe('#customRegExp', function () {
+  
+    describe('#testOtherBodyParser', function () {
+      
+        var app = express();
+        app.use(function fakeMiddleware(req, res, next) {
+          // simulate previous bodyparser by setting req._body = true
+          req._body = true;
+          req.body = 'fake data';
+          next();
+        });
+        app.use(xmlparser());
+        app.post('/', function(req, res) {
+          res.json(req.body);
+        });
+      
+        it('should not parse body if other bodyparser ran before', function (done) {
+          request(app)
+            .post('/')
+            .set('Content-Type', 'application/xml')
+            .send(itemsXML)
+            .expect(200, '"fake data"', done);
+        });
+      
+    });
+  
+    describe('#testCustomRegExp', function () {
 
         // get a fresh export instead of a reference to `xmlbodyparser`
         delete require.cache[require.resolve('../index.js')];
@@ -122,7 +170,7 @@ describe('XmlParserMiddleware', function () {
 
     });
 
-    describe('#routeMiddleware', function () {
+    describe('#testRouteMiddleware', function () {
 
         var app = express();
 
