@@ -1,3 +1,6 @@
+[![NPM Version][npm-image]][npm-url]
+[![Dependency Status][deps-image]][deps-url]
+
 # express-xml-bodyparser
 
 For those rare cases when you have to parse incoming raw xml-body requests. This middleware works with any connect- or express-based nodejs application. 
@@ -83,3 +86,7 @@ The feature is available since version v0.0.5.
 * Refactor to use node's StreamAPIv2 (in effect requiring nodejs >= v0.10.x).
 * Provide functional tests incorporating (any version of) [express](http://expressjs.com/).
 
+[npm-image]:https://img.shields.io/npm/v/express-xml-bodyparser.svg?style=flat
+[npm-url]:https://www.npmjs.com/package/express-xml-bodyparser
+[deps-image]:https://david-dm.org/macedigital/express-xml-bodyparser.svg
+[deps-url]:https://david-dm.org/macedigital/express-xml-bodyparser
