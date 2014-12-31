@@ -37,10 +37,26 @@ describe('XmlParserMiddleware', function () {
         var app = express();
 
         app.use(xmlparser());
+        app.get('/', function (req, res) {
+            res.json(req.body);
+        });
         app.post('/', function(req, res) {
             res.json(req.body);
         });
-
+      
+        it('should not run if there is no request-body', function (done) {
+          request(app)
+            .get('/')
+            .expect(200, '{}', done);
+        });
+        
+        it('should not run if there no content-type header', function (done) {
+          request(app)
+            .post('/')
+            .send(itemsXML)
+            .expect(200, '{}', done);
+        });
+      
         it('should throw 411 on null request', function (done) {
             request(app)
               .post('/')
