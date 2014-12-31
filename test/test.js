@@ -81,15 +81,6 @@ describe('XmlParserMiddleware', function () {
             ;
         });
         
-        it('should not parse xml body if other body-parser ran before', function (done) {
-
-            request(app)
-              .post('/')
-              .set('Content-Type', 'application/vendor-spec+xml')
-              .send(itemsXML)
-              .expect(200, done);
-        });
-
     });
   
     describe('#testOtherBodyParser', function () {
