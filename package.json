@@ -8,10 +8,12 @@
     "Pavel Strashkin (https://github.com/xaka)",
     "ophentis (https://github.com/ophentis)"
   ],
-  "homepage": "https://github.com/macedigital/express-xml-bodyparser.git",
+  "homepage": "https://github.com/macedigital/express-xml-bodyparser",
   "main": "./index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha --reporter spec --check-leaks --bail test/",
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/"
   },
   "repository": {
     "type": "git",
@@ -20,18 +22,34 @@
   "keywords": [
     "xml",
     "json",
-    "middleware"
+    "middleware",
+    "parser",
+    "express"
   ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/macedigital/express-xml-bodyparser/issues"
   },
   "dependencies": {
-    "xml2js": "~0.4.1"
+    "xml2js": "~0.4.4"
   },
   "devDependencies": {
-    "mocha": "*",
-    "supertest": "*",
+    "mocha": "~2.1.0",
+    "supertest": "~0.15",
+    "istanbul": "~0.3.5",
     "express": "<5.x"
-  }
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.js",
+    "lib/"
+  ],
+  "readmeFilename": "README.md"
 }
