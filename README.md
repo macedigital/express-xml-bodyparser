@@ -1,6 +1,7 @@
 [![NPM Version][npm-image]][npm-url]
 [![Dependency Status][deps-image]][deps-url]
 [![Build Status][ci-image]][ci-url]
+[![Code Coverage status][codecov-image]][codecov-url]
 
 # express-xml-bodyparser
 
@@ -93,3 +94,5 @@ The feature is available since version v0.0.5.
 [deps-url]:https://david-dm.org/macedigital/express-xml-bodyparser
 [ci-image]: https://travis-ci.org/macedigital/express-xml-bodyparser.svg?style=flat
 [ci-url]: https://travis-ci.org/macedigital/express-xml-bodyparser
+[codecov-image]:https://img.shields.io/codecov/c/github/macedigital/express-xml-bodyparser.svg?style=flat
+[codecov-url]:https://codecov.io/github/macedigital/express-xml-bodyparser
