@@ -1,5 +1,6 @@
 [![NPM Version][npm-image]][npm-url]
 [![Dependency Status][deps-image]][deps-url]
+[![Build Status][ci-image]][ci-url]
 
 # express-xml-bodyparser
 
@@ -90,3 +91,5 @@ The feature is available since version v0.0.5.
 [npm-url]:https://www.npmjs.com/package/express-xml-bodyparser
 [deps-image]:https://david-dm.org/macedigital/express-xml-bodyparser.svg
 [deps-url]:https://david-dm.org/macedigital/express-xml-bodyparser
+[ci-image]: https://travis-ci.org/macedigital/express-xml-bodyparser.svg?style=flat
+[ci-url]: https://travis-ci.org/macedigital/express-xml-bodyparser
