@@ -1,0 +1,30 @@
+{
+  "name": "express-xml-bodyparser",
+  "version": "0.0.6",
+  "dependencies": {
+    "xml2js": {
+      "version": "0.4.4",
+      "from": "xml2js@0.4.4",
+      "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.4.4.tgz",
+      "dependencies": {
+        "sax": {
+          "version": "0.6.1",
+          "from": "sax@>=0.6.0 <0.7.0",
+          "resolved": "https://registry.npmjs.org/sax/-/sax-0.6.1.tgz"
+        },
+        "xmlbuilder": {
+          "version": "2.5.2",
+          "from": "xmlbuilder@>=1.0.0",
+          "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-2.5.2.tgz",
+          "dependencies": {
+            "lodash": {
+              "version": "3.2.0",
+              "from": "lodash@>=3.2.0 <3.3.0",
+              "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.2.0.tgz"
+            }
+          }
+        }
+      }
+    }
+  }
+}
