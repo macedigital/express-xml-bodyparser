@@ -37,7 +37,7 @@ var xml2jsDefaults = {
     explicitArray: false,
     normalize: false,
     normalizeTags: false,
-trim: true
+    trim: true
 }
 ````
 
@@ -99,7 +99,7 @@ The feature is available since version v0.0.5.
 ## TODO / Ideas
 
 * Refactor to use node's StreamAPIv2 (in effect requiring nodejs >= v0.10.x).
-* Provide functional tests incorporating (any version of) [express](http://expressjs.com/).
+* ~~Provide functional tests incorporating (any version of) [express](http://expressjs.com/).~~
 
 [npm-image]:https://img.shields.io/npm/v/express-xml-bodyparser.svg?style=flat
 [npm-url]:https://www.npmjs.com/package/express-xml-bodyparser
