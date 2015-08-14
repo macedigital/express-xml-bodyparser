@@ -18,18 +18,18 @@ describe('XmlParserMiddleware', function () {
     var regexp = xmlparser.regexp;
 
     it('should detect common XML mime-types', function () {
-      assert.equal(true, regexp.test('text/xml'));
-      assert.equal(true, regexp.test('application/xml'));
-      assert.equal(true, regexp.test('application/rss+xml'));
-      assert.equal(true, regexp.test('application/atom+xml'));
-      assert.equal(true, regexp.test('application/vnd.google-earth.kml+xml'));
-      assert.equal(true, regexp.test('application/xhtml+xml'));
+      assert.equal(regexp.test('text/xml'), true);
+      assert.equal(regexp.test('application/xml'), true);
+      assert.equal(regexp.test('application/rss+xml'), true);
+      assert.equal(regexp.test('application/atom+xml'), true);
+      assert.equal(regexp.test('application/vnd.google-earth.kml+xml'), true);
+      assert.equal(regexp.test('application/xhtml+xml'), true);
     });
 
     it('should not interfere with other body parsers', function () {
-      assert.equal(false, regexp.test('application/json'));
-      assert.equal(false, regexp.test('application/x-www-form-urlencoded'));
-      assert.equal(false, regexp.test('multipart/form-data'));
+      assert.equal(regexp.test('application/json'), false);
+      assert.equal(regexp.test('application/x-www-form-urlencoded'), false);
+      assert.equal(regexp.test('multipart/form-data'), false);
     });
 
   });
@@ -68,7 +68,6 @@ describe('XmlParserMiddleware', function () {
         .set('Transfer-Encoding', '')
         .expect(200, function(err, res) {
           assert.deepEqual(res.body, {});
-          assert.deepEqual(res.rawBody, undefined);
           done();
         });
     });
@@ -79,6 +78,7 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .set('Transfer-Encoding', '')
         .expect(411, done);
+
     });
 
     it('should throw 411 on fake Content-Length header', function (done) {
@@ -94,6 +94,33 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .send('   ')
         .expect(411, done);
+    });
+
+    it('should throw 400 on unclosed root tag', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/vendor-spec+xml')
+        .send('<xml>this is invalid')
+        .expect(400, done);
+    });
+
+    it('should throw 400 on unexpected end', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/vendor-spec+xml')
+        .send('<xml>><')
+        .expect(400, done);
+    });
+
+    it('should send 200 on empty xml root tag', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/xml')
+        .send('<xml></xml>')
+        .expect(200, function (err, res) {
+          assert.deepEqual(res.body, {});
+          done();
+        });
     });
 
     it('should parse xml body', function () {
@@ -115,6 +142,14 @@ describe('XmlParserMiddleware', function () {
         .post('/')
         .set('Content-Type', 'application/vendor-spec+xml')
         .send('<xml>this is invalid')
+        .expect(400, done);
+    });
+    
+    it('should throw 400 on invalid xml body', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/vendor-spec+xml')
+        .send('<xml><>')
         .expect(400, done);
     });
 
@@ -162,8 +197,8 @@ describe('XmlParserMiddleware', function () {
 
     it('should permit overloading mime-type regular expression', function () {
       assert.notEqual(middleware, xmlparser.regexp);
-      assert.equal(true, middleware.regexp.test('custom/mime'));
-      assert.equal(false, middleware.regexp.test('application/xml'));
+      assert.equal(middleware.regexp.test('custom/mime'), true);
+      assert.equal(middleware.regexp.test('application/xml'), false);
     });
 
     it('should ignore non-matching content-types', function () {
@@ -176,7 +211,7 @@ describe('XmlParserMiddleware', function () {
           if (err) {
             throw err;
           }
-          assert.deepEqual({}, res.body);
+          assert.deepEqual(res.body, {});
         });
     });
 
@@ -190,7 +225,7 @@ describe('XmlParserMiddleware', function () {
           if (err) {
             throw err;
           }
-          assert.deepEqual(itemList, res.body);
+          assert.deepEqual(res.body, itemList);
         });
     });
 
@@ -217,7 +252,7 @@ describe('XmlParserMiddleware', function () {
           if (err) {
             throw err;
           }
-          assert.deepEqual({}, res.body);
+          assert.deepEqual(res.body, {});
         });
     });
 
@@ -231,7 +266,79 @@ describe('XmlParserMiddleware', function () {
           if (err) {
             throw err;
           }
-          assert.deepEqual(itemList, res.body);
+          assert.deepEqual(res.body, itemList);
+        });
+    });
+
+  });
+
+  describe('#testParserOptions', function() {
+
+    var app;
+    var responder = function (req, res) {
+      res.json(req.body);
+    };
+    var xml = '<UPPERCASE aTTr="mixed">  TRIMM   </UPPERCASE>';
+    var list = '<ITEMs><item attr="one"/><item attr="two"/></ITEMs>';
+
+    beforeEach(function() {
+      app = express();
+    });
+
+    it('should normalize xml data by default', function (done) {
+      app.post('/', xmlparser(), responder);
+
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/xml')
+        .send(xml)
+        .expect(200, function (err, res) {
+          assert.equal(err, null);
+          assert.deepEqual(res.body, { uppercase: { _: 'TRIMM', '$': { aTTr: 'mixed' } } });
+          done();
+        });
+    });
+
+    it('should merge custom options', function (done) {
+      app.post('/', xmlparser({normalize: false, normalizeTags: false, trim: false}), responder);
+
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/xml')
+        .send(xml)
+        .expect(200, function (err, res) {
+          assert.equal(err, null);
+          assert.deepEqual(res.body, { UPPERCASE: { _: '  TRIMM   ', '$': { aTTr: 'mixed' } } });
+          done();
+        });
+
+    });
+
+    it('should merge self-closing tags with same name', function (done) {
+      app.post('/', xmlparser(), responder);
+
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/xml')
+        .send(list)
+        .expect(200, function (err, res) {
+          assert.equal(err, null);
+          assert.deepEqual(res.body, {
+            items: {
+              item: [
+                {
+                  $: {
+                    attr: 'one'
+                  }
+                },
+                {
+                  $: {
+                    attr: 'two'
+                  }
+                }
+              ]
+            }});
+          done();
         });
     });
 
