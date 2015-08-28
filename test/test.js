@@ -104,6 +104,14 @@ describe('XmlParserMiddleware', function () {
         .expect(400, done);
     });
 
+    it('should throw 400 on invalid char before root tag', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/vendor-spec+xml')
+        .send('"<xml>ok</xml>')
+        .expect(400, done);
+    });
+
     it('should throw 400 on unexpected end', function (done) {
       request(app)
         .post('/')
@@ -118,7 +126,9 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .send('<xml></xml>')
         .expect(200, function (err, res) {
-          assert.deepEqual(res.body, {});
+          assert.deepEqual(res.body, {
+            xml: ''
+          });
           done();
         });
     });
@@ -144,7 +154,7 @@ describe('XmlParserMiddleware', function () {
         .send('<xml>this is invalid')
         .expect(400, done);
     });
-    
+
     it('should throw 400 on invalid xml body', function (done) {
       request(app)
         .post('/')
@@ -237,7 +247,7 @@ describe('XmlParserMiddleware', function () {
     app.post('/', function (req, res) {
       res.json(req.body);
     });
-    
+
     app.post('/xml', xmlparser(), function (req, res) {
       res.json(req.body);
     });
