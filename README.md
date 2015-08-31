@@ -33,7 +33,6 @@ Without specifying custom options, the middleware applies some opionated default
 
 ````javascript
 var xml2jsDefaults = {
-    async: false,
     explicitArray: false,
     normalize: false,
     normalizeTags: false,
@@ -99,6 +98,7 @@ The feature is available since version v0.0.5.
 ## TODO / Ideas
 
 * Refactor to use node's StreamAPIv2 (in effect requiring nodejs >= v0.10.x).
+* Require [raw-body](https://github.com/stream-utils/raw-body) with added benefits of limiting request body size and setting charset-encoding based on request data.
 * ~~Provide functional tests incorporating (any version of) [express](http://expressjs.com/).~~
 
 [npm-image]:https://img.shields.io/npm/v/express-xml-bodyparser.svg?style=flat
