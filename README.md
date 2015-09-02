@@ -13,7 +13,7 @@ Admittedly, having to deal with XML data has become less common in recent years.
 
 There is a [similar xml bodyparser](https://github.com/falsecz/connect-xml-bodyparser) module available, but you might appreciate some notable differences:
 
-* Custom configuration options how to deal with xml data.
+* Custom configuration options how to deal with XML data.
 * Attempt to parse data only once, even if middleware is called multiple times.
 * Skip data parsing immediately if no req-body has been sent.
 * Accept any XML-based content-type, e.g. `application/rss+xml`
@@ -25,7 +25,10 @@ Utilize [npm](http://npmjs.org/) by typing `npm install express-xml-bodyparser -
 
 ## Configuration 
 
-You can pass configuration options into the xml parser middleware. They're exactly the same options you would use for [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js), which this middleware relies on. For further details look at all [available configuration options](https://github.com/Leonidas-from-XIV/node-xml2js#options).
+You can pass configuration options into the XML parser middleware. They're exactly the same options you would use for [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js), which this middleware relies on. For further details look at all [available configuration options](https://github.com/Leonidas-from-XIV/node-xml2js#options).
+
+**IMPORTANT:** Currently, it is not advisable to operate xml2js in `async=true` mode. Unless you can absolutely trust input data (which you should not), certain types of invalid XML will throw uncaught exceptions.
+See https://github.com/Leonidas-from-XIV/node-xml2js/issues/232 for progress on this issue. Until then, the default option is set to `async=false`.
 
 Without specifying custom options, the middleware applies some opionated defaults meant to normalize the resulting json object properties. All whitespace in text nodes will be trimmed, property and tag names will be lowercased. The parser will always return node lists explicitly cast to Array.
 
@@ -79,7 +82,7 @@ app.post('/receive-xml', xmlparser({trim: false, explicitArray: false}), functio
 });
 ````
 
-Above example demonstrates how to pass custom options to the xml parser. 
+Above example demonstrates how to pass custom options to the XML parser. 
 
 ## Customize mime-type detection
 
@@ -91,7 +94,7 @@ var xmlparser = require('express-xml-bodyparser');
 xmlparser.regexp = /^text\/xml$/i;
 ````
 
-Doing so, will allow you to restrict xml parsing to custom mime-types only. Thanks to @ophentis for the suggestion.
+Doing so, will allow you to restrict XML parsing to custom mime-types only. Thanks to @ophentis for the suggestion.
 Just make sure your regular expression actually matches mime-types you're interested in.
 The feature is available since version v0.0.5.
 
