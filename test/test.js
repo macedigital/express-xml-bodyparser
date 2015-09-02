@@ -120,6 +120,14 @@ describe('XmlParserMiddleware', function () {
         .expect(400, done);
     });
 
+    it('should throw 400 on non-XML', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/xml')
+        .send('"johnny b. goode"')
+        .expect(400, done);
+    });
+
     it('should send 200 on empty xml root tag', function (done) {
       request(app)
         .post('/')
