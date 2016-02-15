@@ -94,15 +94,24 @@ var xmlparser = require('express-xml-bodyparser');
 xmlparser.regexp = /^text\/xml$/i;
 ````
 
-Doing so, will allow you to restrict XML parsing to custom mime-types only. Thanks to @ophentis for the suggestion.
+Doing so, will allow you to restrict XML parsing to custom mime-types only. Thanks to [@ophentis](https://github.com/ophentis) for the suggestion.
 Just make sure your regular expression actually matches mime-types you're interested in.
 The feature is available since version v0.0.5.
 
-## TODO / Ideas
+**IMPORTANT** In versions v0.2.x custom regular expressions were ignored in mime-type parsing. The issue has been fixed in v0.3.0. If you need/rely on this feature, please upgrade to a newer version. Many thanks to [@dirksen](https://github.com/dirksen) who discovered this issue.
 
+## Roadmap to v1.0.0
+
+Lets start a discussion how to get to there (stable API).
+
+Here are some thoughts:
+
+* 100% align with [body-parser](https://github.com/expressjs/body-parser)'s error and success handling when dealing with `req.body` and `req.rawBody`.
+* Possibly dropping support for [connect](https://github.com/senchalabs/connect) altogether at one point?
+* Deprecate mutating the `xmlparser` middleware's mime-type regexp in favor of passing customizations into the options parameters (perfect if using route-middlewares).
 * Refactor to use node's StreamAPIv2 (in effect requiring nodejs >= v0.10.x).
 * Require [raw-body](https://github.com/stream-utils/raw-body) with added benefits of limiting request body size and setting charset-encoding based on request data.
-* ~~Provide functional tests incorporating (any version of) [express](http://expressjs.com/).~~
+* ~~Provide functional tests incorporating (a~~ny~~ version of) [express](http://expressjs.com/).~~
 
 [npm-image]:https://img.shields.io/npm/v/express-xml-bodyparser.svg?style=flat
 [npm-url]:https://www.npmjs.com/package/express-xml-bodyparser
