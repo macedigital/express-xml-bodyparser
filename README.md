@@ -111,6 +111,7 @@ Here are some thoughts:
 * Deprecate mutating the `xmlparser` middleware's mime-type regexp in favor of passing customizations into the options parameters (perfect if using route-middlewares).
 * Refactor to use node's StreamAPIv2 (in effect requiring nodejs >= v0.10.x).
 * Require [raw-body](https://github.com/stream-utils/raw-body) with added benefits of limiting request body size and setting charset-encoding based on request data.
+* Finally really apply and automate [conventional changelog](https://github.com/ajoslin/conventional-changelog/) practice :)
 * ~~Provide functional tests incorporating (a~~ny~~ version of) [express](http://expressjs.com/).~~
 
 [npm-image]:https://img.shields.io/npm/v/express-xml-bodyparser.svg?style=flat
