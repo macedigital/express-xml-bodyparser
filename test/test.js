@@ -2,6 +2,7 @@ var assert = require('assert');
 var xmlparser = require('./../index.js');
 var express = require('express');
 var request = require('supertest');
+var originalRegexp = xmlparser.regexp;
 var itemList = {
   list: {
     item: [
@@ -66,7 +67,10 @@ describe('XmlParserMiddleware', function () {
         .post('/')
         .set('Content-Type', '')
         .set('Transfer-Encoding', '')
-        .expect(200, function(err, res) {
+        .expect(200, function (err, res) {
+          if (err) {
+            return done(err);
+          }
           assert.deepEqual(res.body, {});
           done();
         });
@@ -78,7 +82,6 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .set('Transfer-Encoding', '')
         .expect(411, done);
-
     });
 
     it('should throw 411 on fake Content-Length header', function (done) {
@@ -134,6 +137,9 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .send('<xml></xml>')
         .expect(200, function (err, res) {
+          if (err) {
+            return done(err);
+          }
           assert.deepEqual(res.body, {
             xml: ''
           });
@@ -141,17 +147,17 @@ describe('XmlParserMiddleware', function () {
         });
     });
 
-    it('should parse xml body', function () {
+    it('should parse xml body', function (done) {
       request(app)
         .post('/')
         .set('Content-Type', 'application/vendor-spec+xml')
         .send(itemsXML)
-        .expect(200)
-        .end(function (err, res) {
+        .expect(200, function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           assert.deepEqual(itemList, res.body);
+          done();
         });
     });
 
@@ -199,98 +205,101 @@ describe('XmlParserMiddleware', function () {
 
   describe('#testCustomRegExp', function () {
 
-    // get a fresh export instead of a reference to `xmlbodyparser`
-    delete require.cache[require.resolve('../index.js')];
+    var customMimeRegexp = /custom\/mime/i;
 
-    var middleware = require('../index.js');
+    before(function () {
+      xmlparser.regexp = customMimeRegexp;
+    });
+
+    after(function () {
+      xmlparser.regexp = originalRegexp;
+    });
+
     var app = express();
-
-    middleware.regexp = /custom\/mime/i;
-
-    app.use(middleware);
-
+    app.use(xmlparser());
     app.post('/', function (req, res) {
       res.json(req.body);
     });
 
     it('should permit overloading mime-type regular expression', function () {
-      assert.notEqual(middleware, xmlparser.regexp);
-      assert.equal(middleware.regexp.test('custom/mime'), true);
-      assert.equal(middleware.regexp.test('application/xml'), false);
+      assert.notEqual(originalRegexp, xmlparser.regexp);
+      assert.equal(xmlparser.regexp.test('custom/mime'), true);
+      assert.equal(xmlparser.regexp.test('application/xml'), false);
     });
 
-    it('should ignore non-matching content-types', function () {
+    it('should ignore non-matching content-types', function (done) {
       request(app)
         .post('/')
         .set('Content-Type', 'application/xml')
         .send(itemsXML)
-        .expect(200)
-        .end(function (err, res) {
+        .expect(200, function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           assert.deepEqual(res.body, {});
+          done();
         });
     });
 
-    it('should parse matching content-types', function () {
+    it('should parse matching content-types', function (done) {
       request(app)
         .post('/')
         .set('Content-Type', 'custom/mime')
         .send(itemsXML)
-        .expect(200)
-        .end(function (err, res) {
+        .expect(200, function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           assert.deepEqual(res.body, itemList);
+          done();
         });
     });
 
   });
 
   describe('#testRouteMiddleware', function () {
+
     var app = express();
-
     app.post('/', function (req, res) {
+      assert.equal(req.rawBody, undefined);
       res.json(req.body);
     });
-
     app.post('/xml', xmlparser(), function (req, res) {
+      assert.equal(req.rawBody, itemsXML);
       res.json(req.body);
     });
 
-    it('should not act as an app middleware', function () {
+    it('should not act as an app middleware', function (done) {
       request(app)
         .post('/')
         .set('Content-Type', 'application/xml')
         .send(itemsXML)
-        .expect(200)
-        .end(function (err, res) {
+        .expect(200, function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
-          assert.deepEqual(res.body, {});
+          assert.equal(res.body, '');
+          done();
         });
     });
 
-    it('should parse route xml request', function () {
+    it('should parse route xml request', function (done) {
       request(app)
         .post('/xml')
         .set('Content-Type', 'application/xml')
         .send(itemsXML)
-        .expect(200)
-        .end(function (err, res) {
+        .expect(200, function (err, res) {
           if (err) {
-            throw err;
+            return done(err);
           }
           assert.deepEqual(res.body, itemList);
+          done();
         });
     });
 
   });
 
-  describe('#testParserOptions', function() {
+  describe('#testParserOptions', function () {
 
     var app;
     var responder = function (req, res) {
@@ -299,7 +308,7 @@ describe('XmlParserMiddleware', function () {
     var xml = '<UPPERCASE aTTr="mixed">  TRIMM   </UPPERCASE>';
     var list = '<ITEMs><item attr="one"/><item attr="two"/></ITEMs>';
 
-    beforeEach(function() {
+    beforeEach(function () {
       app = express();
     });
 
@@ -311,8 +320,10 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .send(xml)
         .expect(200, function (err, res) {
-          assert.equal(err, null);
-          assert.deepEqual(res.body, { uppercase: { _: 'TRIMM', '$': { aTTr: 'mixed' } } });
+          if (err) {
+            return done(err);
+          }
+          assert.deepEqual(res.body, {uppercase: {_: 'TRIMM', '$': {aTTr: 'mixed'}}});
           done();
         });
     });
@@ -325,8 +336,10 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .send(xml)
         .expect(200, function (err, res) {
-          assert.equal(err, null);
-          assert.deepEqual(res.body, { UPPERCASE: { _: '  TRIMM   ', '$': { aTTr: 'mixed' } } });
+          if (err) {
+            return done(err);
+          }
+          assert.deepEqual(res.body, {UPPERCASE: {_: '  TRIMM   ', '$': {aTTr: 'mixed'}}});
           done();
         });
 
@@ -340,7 +353,9 @@ describe('XmlParserMiddleware', function () {
         .set('Content-Type', 'application/xml')
         .send(list)
         .expect(200, function (err, res) {
-          assert.equal(err, null);
+          if (err) {
+            return done(err);
+          }
           assert.deepEqual(res.body, {
             items: {
               item: [
@@ -355,7 +370,8 @@ describe('XmlParserMiddleware', function () {
                   }
                 }
               ]
-            }});
+            }
+          });
           done();
         });
     });
