@@ -2,6 +2,7 @@
 [![Dependency Status][deps-image]][deps-url]
 [![Build Status][ci-image]][ci-url]
 [![Code Coverage status][codecov-image]][codecov-url]
+[![Gitter channel][gitter-image]][gitter-url]
 
 # express-xml-bodyparser
 
@@ -122,3 +123,5 @@ Here are some thoughts:
 [ci-url]: https://travis-ci.org/macedigital/express-xml-bodyparser
 [codecov-image]:https://img.shields.io/codecov/c/github/macedigital/express-xml-bodyparser.svg?style=flat
 [codecov-url]:https://codecov.io/github/macedigital/express-xml-bodyparser
+[gitter-image]:https://img.shields.io/gitter/room/macedigital/express-xml-bodyparser.svg
+[gitter-url]:https://gitter.im/macedigital/express-xml-bodyparser
