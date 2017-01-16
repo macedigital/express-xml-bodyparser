@@ -1,4 +1,4 @@
-/*global describe, it*/
+/*global describe, beforeEach, before, after, it*/
 'use strict';
 
 var assert = require('assert');
@@ -6,17 +6,26 @@ var xmlparser = require('./../index.js');
 var express = require('express');
 var request = require('supertest');
 var originalRegexp = xmlparser.regexp;
-var itemList = {
-  list: {
-    item: [
-      'item1', 'item2', 'item3'
-    ]
-  }
-};
-var itemsXML = '<list><item>item1</item><item>item2</item><item>item3</item></list>';
 
 describe('XmlParserMiddleware', function () {
+  
+  var app;
+  var itemList = {
+    list: {
+      item: [
+        'item1', 'item2', 'item3'
+      ]
+    }
+  };
+  var itemsXML = '<list><item>item1</item><item>item2</item><item>item3</item></list>';
+  var responder = function (req, res) {
+    res.json(req.body);
+  };
 
+  beforeEach(function () {
+    app = express();
+  });
+  
   describe('#testMime', function () {
 
     var regexp = xmlparser.regexp;
@@ -34,22 +43,17 @@ describe('XmlParserMiddleware', function () {
       assert.equal(regexp.test('application/json'), false);
       assert.equal(regexp.test('application/x-www-form-urlencoded'), false);
       assert.equal(regexp.test('multipart/form-data'), false);
+      assert.equal(regexp.test(''), false);
     });
 
   });
 
   describe('#testMiddleware', function () {
-
-    var app = express();
-
-    app.use(xmlparser());
-
-    app.get('/', function (req, res) {
-      res.json(req.body);
-    });
-
-    app.post('/', function (req, res) {
-      res.json(req.body);
+    
+    beforeEach(function () {
+      app.use(xmlparser());
+      app.get('/', responder);
+      app.post('/', responder);
     });
 
     it('should not run if there is no request-body', function (done) {
@@ -184,16 +188,15 @@ describe('XmlParserMiddleware', function () {
 
   describe('#testOtherBodyParser', function () {
 
-    var app = express();
-    app.use(function fakeMiddleware(req, res, next) {
-      // simulate previous bodyparser by setting req._body = true
-      req._body = true;
-      req.body = 'fake data';
-      next();
-    });
-    app.use(xmlparser());
-    app.post('/', function (req, res) {
-      res.json(req.body);
+    beforeEach(function () {
+      app.use(function fakeMiddleware(req, res, next) {
+        // simulate previous bodyparser by setting req._body = true
+        req._body = true;
+        req.body = 'fake data';
+        next();
+      });
+      app.use(xmlparser());
+      app.post('/', responder);
     });
 
     it('should not parse body if other bodyparser ran before', function (done) {
@@ -218,12 +221,11 @@ describe('XmlParserMiddleware', function () {
       xmlparser.regexp = originalRegexp;
     });
 
-    var app = express();
-    app.use(xmlparser());
-    app.post('/', function (req, res) {
-      res.json(req.body);
+    beforeEach(function () {
+      app.use(xmlparser());
+      app.post('/', responder);
     });
-
+    
     it('should permit overloading mime-type regular expression', function () {
       assert.notEqual(originalRegexp, xmlparser.regexp);
       assert.equal(xmlparser.regexp.test('custom/mime'), true);
@@ -261,15 +263,16 @@ describe('XmlParserMiddleware', function () {
   });
 
   describe('#testRouteMiddleware', function () {
-
-    var app = express();
-    app.post('/', function (req, res) {
-      assert.equal(req.rawBody, undefined);
-      res.json(req.body);
-    });
-    app.post('/xml', xmlparser(), function (req, res) {
-      assert.equal(req.rawBody, itemsXML);
-      res.json(req.body);
+    
+    beforeEach(function () {
+      app.post('/', function (req, res) {
+        assert.equal(req.rawBody, undefined);
+        res.json(req.body);
+      });
+      app.post('/xml', xmlparser(), function (req, res) {
+        assert.equal(req.rawBody, itemsXML);
+        res.json(req.body);
+      });
     });
 
     it('should not act as an app middleware', function (done) {
@@ -302,18 +305,47 @@ describe('XmlParserMiddleware', function () {
 
   });
 
-  describe('#testParserOptions', function () {
+  describe('#when configured with no explicit array and non-normalized tagnames', function () {
+    var inputXml;
+    var expectedJson;
+    
+    beforeEach(function () {
+      app.use(xmlparser({
+        explicitArray: false,
+        normalizeTags: false
+      }));
+      app.post('/', responder);
+      inputXml = '<?xml version="1.0" encoding="UTF-8" ?>\n<error>\n\t<message>\n\t\t<test>     test </test>\n\t</message>\n\t<errorCode>12</errorCode>\n</error>';
+      expectedJson = {
+        error: {
+          message: {
+            test: 'test'
+          },
+          errorCode: '12' // numbers will be converted to string
+        }
+      }
+    });
 
-    var app;
-    var responder = function (req, res) {
-      res.json(req.body);
-    };
+    it('should extract children as simple object with same keys as input', function (done) {
+      request(app)
+        .post('/')
+        .set('Content-Type', 'application/xml')
+        .send(inputXml)
+        .expect(200, function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          assert.deepEqual(res.body, expectedJson);
+          done();
+        });
+    });
+        
+  });
+  
+  describe('#testParserOptions', function () {
+    
     var xml = '<UPPERCASE aTTr="mixed">  TRIMM   </UPPERCASE>';
     var list = '<ITEMs><item attr="one"/><item attr="two"/></ITEMs>';
-
-    beforeEach(function () {
-      app = express();
-    });
 
     it('should normalize xml data by default', function (done) {
       app.post('/', xmlparser(), responder);
