@@ -1,3 +1,6 @@
+/*global describe, it*/
+'use strict';
+
 var assert = require('assert');
 var xmlparser = require('./../index.js');
 var express = require('express');
