@@ -36,10 +36,10 @@
     "xml2js": "^0.4.11"
   },
   "devDependencies": {
-    "mocha": "^2.2.5",
-    "supertest": "^1.0.1",
-    "istanbul": "^0.3.7",
-    "express": "^3.18"
+    "mocha": "^3.2.0",
+    "supertest": "^2.0.1",
+    "istanbul": "^0.4.5",
+    "express": "^4.14.0"
   },
   "engines": {
     "node": ">=0.10"
