@@ -13,9 +13,9 @@
   "homepage": "https://github.com/macedigital/express-xml-bodyparser",
   "main": "./index.js",
   "scripts": {
-    "test": "mocha --reporter spec --check-leaks --bail test/ 2> /dev/null",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot --check-leaks test/ 2> /dev/null",
-    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --reporter spec --check-leaks test/ 2> /dev/null"
+    "test": "mocha 2> /dev/null",
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --reporter dot 2> /dev/null",
+    "test-travis": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- 2> /dev/null"
   },
   "repository": {
     "type": "git",
