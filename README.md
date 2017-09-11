@@ -28,9 +28,6 @@ Utilize [npm](http://npmjs.org/) by typing `npm install express-xml-bodyparser -
 
 You can pass configuration options into the XML parser middleware. They're exactly the same options you would use for [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js), which this middleware relies on. For further details look at all [available configuration options](https://github.com/Leonidas-from-XIV/node-xml2js#options).
 
-**IMPORTANT:** Currently, it is not advisable to operate xml2js in `async=true` mode. Unless you can absolutely trust input data (which you should not), certain types of invalid XML will throw uncaught exceptions.
-See https://github.com/Leonidas-from-XIV/node-xml2js/issues/232 for progress on this issue. Until then, the default option is set to `async=false`.
-
 Without specifying custom options, the middleware applies some opionated defaults meant to normalize the resulting json object properties. All whitespace in text nodes will be trimmed, property and tag names will be lowercased. The parser will always return node lists explicitly cast to Array.
 
 **NOTE:** Custom options will be merged with aforementioned opionated defaults, so in case you want to use `xml2js` defaults, you will have to specify the following:
