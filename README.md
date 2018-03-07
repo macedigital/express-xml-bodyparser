@@ -6,7 +6,7 @@
 
 # express-xml-bodyparser
 
-For those rare cases when you have to parse incoming raw xml-body requests. This middleware works with any connect- or express-based nodejs application. 
+For those rare cases when you have to parse incoming raw xml-body requests. This middleware works with any connect- or express-based nodejs application.
 
 ## Description
 
@@ -20,11 +20,11 @@ There is a [similar xml bodyparser](https://github.com/falsecz/connect-xml-bodyp
 * Accept any XML-based content-type, e.g. `application/rss+xml`
 * No dependency on coffeescript keeping dependencies to a minimum.
 
-## Installation 
+## Installation
 
-Utilize [npm](http://npmjs.org/) by typing `npm install express-xml-bodyparser --save` in your projects root folder and your good to go. 
+Utilize [npm](http://npmjs.org/) by typing `npm install express-xml-bodyparser --save` in your projects root folder and your good to go.
 
-## Configuration 
+## Configuration
 
 You can pass configuration options into the XML parser middleware. They're exactly the same options you would use for [xml2js](https://github.com/Leonidas-from-XIV/node-xml2js), which this middleware relies on. For further details look at all [available configuration options](https://github.com/Leonidas-from-XIV/node-xml2js#options).
 
@@ -43,9 +43,9 @@ var xml2jsDefaults = {
 
 This change appeared in v0.1.0, older versions would merge options against `xml2js`'s default options.
 
-## Usage 
+## Usage
 
-You can either use express-xml-bodyparser at application level, or for specific routes only. 
+You can either use express-xml-bodyparser at application level, or for specific routes only.
 
 Here is an example of an express application with default settings:
 
@@ -56,11 +56,11 @@ var express = require('express'),
     server = http.createServer(app),
     xmlparser = require('express-xml-bodyparser');
 
-// .. other middleware ... 
+// .. other middleware ...
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(xmlparser());
-// ... other middleware ... 
+// ... other middleware ...
 
 app.post('/receive-xml', function(req, res, next) {
 
@@ -80,12 +80,11 @@ app.post('/receive-xml', xmlparser({trim: false, explicitArray: false}), functio
 });
 ````
 
-Above example demonstrates how to pass custom options to the XML parser. 
+Above example demonstrates how to pass custom options to the XML parser.
 
 ## Customize mime-type detection
 
-If you want to customize the regular expression that checks whether the xmlparser should do its work or not, 
-you can provide your own by overloading the `xmlparser.regexp` property, like so: 
+If you want to customize the regular expression that checks whether the xmlparser should do its work or not, you can provide your own by overloading the `xmlparser.regexp` property, like so:
 
 ````javascript
 var xmlparser = require('express-xml-bodyparser');
