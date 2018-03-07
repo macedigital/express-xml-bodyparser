@@ -6,6 +6,8 @@
 
 # express-xml-bodyparser
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/macedigital/express-xml-bodyparser.svg)](https://greenkeeper.io/)
+
 For those rare cases when you have to parse incoming raw xml-body requests. This middleware works with any connect- or express-based nodejs application. 
 
 ## Description
