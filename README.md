@@ -43,6 +43,16 @@ var xml2jsDefaults = {
 
 This change appeared in v0.1.0, older versions would merge options against `xml2js`'s default options.
 
+## Typescript support
+
+There are now type-definitions available at [DefinitelyTyped](https://www.npmjs.com/package/@types/express-xml-bodyparser). In order to use them in your project, add this to your (development) dependencies:
+
+```sh
+npm install --save-dev @types/express-xml-bodyparser
+```
+
+Thanks to [@noticeMaker](https://github.com/noticeMaker) for creating the type-definitions.
+
 ## Usage
 
 You can either use express-xml-bodyparser at application level, or for specific routes only.
@@ -76,7 +86,7 @@ If you wanted to use express-xml-bodyparser for specific routes only, you would 
 
 ````javascript
 app.post('/receive-xml', xmlparser({trim: false, explicitArray: false}), function(req, res, next) {
-  // check req.body  
+  // check req.body
 });
 ````
 
