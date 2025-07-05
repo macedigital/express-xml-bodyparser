@@ -5,6 +5,7 @@ results
 npm-debug.log
 node_modules
 coverage
+.nyc_output
 
 # Numerous always-ignore extensions
 *.diff

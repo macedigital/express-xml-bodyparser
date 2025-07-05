@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-  - "4"
-  - "6"
-  - "8"
+  - "18"
+  - "20"
+  - "22"
 matrix:
   fast_finish: true
 script: "npm run-script test-travis"
-after_script: "npm install codecov.io && cat ./coverage/lcov.info | codecov"
+after_success: npm run coverage
