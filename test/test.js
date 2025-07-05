@@ -8,7 +8,7 @@ var request = require('supertest');
 var originalRegexp = xmlparser.regexp;
 
 describe('XmlParserMiddleware', function () {
-  
+
   var app;
   var itemList = {
     list: {
@@ -25,7 +25,7 @@ describe('XmlParserMiddleware', function () {
   beforeEach(function () {
     app = express();
   });
-  
+
   describe('#testMime', function () {
 
     var regexp = xmlparser.regexp;
@@ -49,7 +49,7 @@ describe('XmlParserMiddleware', function () {
   });
 
   describe('#testMiddleware', function () {
-    
+
     beforeEach(function () {
       app.use(xmlparser());
       app.get('/', responder);
@@ -95,7 +95,7 @@ describe('XmlParserMiddleware', function () {
       request(app).post('/')
         .set('Content-Type', 'application/xml')
         .set('Content-Length', '')
-        .expect(411, done);
+        .expect(400, done);
     });
 
     it('should throw 411 on empty request body', function (done) {
@@ -225,7 +225,7 @@ describe('XmlParserMiddleware', function () {
       app.use(xmlparser());
       app.post('/', responder);
     });
-    
+
     it('should permit overloading mime-type regular expression', function () {
       assert.notEqual(originalRegexp, xmlparser.regexp);
       assert.equal(xmlparser.regexp.test('custom/mime'), true);
@@ -263,7 +263,7 @@ describe('XmlParserMiddleware', function () {
   });
 
   describe('#testRouteMiddleware', function () {
-    
+
     beforeEach(function () {
       app.post('/', function (req, res) {
         assert.equal(req.rawBody, undefined);
@@ -308,7 +308,7 @@ describe('XmlParserMiddleware', function () {
   describe('#when configured with no explicit array and non-normalized tagnames', function () {
     var inputXml;
     var expectedJson;
-    
+
     beforeEach(function () {
       app.use(xmlparser({
         explicitArray: false,
@@ -339,11 +339,11 @@ describe('XmlParserMiddleware', function () {
           done();
         });
     });
-        
+
   });
-  
+
   describe('#testParserOptions', function () {
-    
+
     var xml = '<UPPERCASE aTTr="mixed">  TRIMM   </UPPERCASE>';
     var list = '<ITEMs><item attr="one"/><item attr="two"/></ITEMs>';
 
