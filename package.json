@@ -34,7 +34,7 @@
     "url": "https://github.com/macedigital/express-xml-bodyparser/issues"
   },
   "dependencies": {
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/express-xml-bodyparser": "^0.3.5",
